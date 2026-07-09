@@ -21,6 +21,8 @@ router.post('/', protect, async (req, res) => {
       feeDescription,
       feeAmount,
       feeNotes,
+      notes1,
+      notes2,
       items,
       subtotal,
       tax,
@@ -65,6 +67,8 @@ router.post('/', protect, async (req, res) => {
       feeDescription: feeDescription || '',
       feeAmount: Number.isFinite(normalizedFeeAmount) ? normalizedFeeAmount : normalizedTotal,
       feeNotes: feeNotes || '',
+      notes1: notes1 || '',
+      notes2: notes2 || '',
       items: normalizedItems,
       subtotal: normalizedSubtotal,
       tax: normalizedTax,
@@ -154,6 +158,44 @@ router.delete('/:id', protect, async (req, res) => {
 
     await invoice.deleteOne();
     res.json({ message: 'Invoice deleted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/invoices/:id
+// @desc    Update invoice
+// @access  Private
+router.put('/:id', protect, async (req, res) => {
+  try {
+    const invoice = await Invoice.findById(req.params.id);
+    
+    if (!invoice) {
+      return res.status(404).json({ message: 'Invoice not found' });
+    }
+
+    // Check if user owns the invoice or is admin
+    if (invoice.userId.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    // Update fields
+    const updateFields = [
+      'invoiceNo', 'invoiceDate', 'customerName', 'customerPhone',
+      'vehicleType', 'vehicleCategory', 'trafficCode',
+      'feeDescription', 'feeAmount', 'feeNotes',
+      'notes1', 'notes2', 'notes', 'subtotal', 'tax', 'total', 'items'
+    ];
+
+    for (const field of updateFields) {
+      if (field in req.body) {
+        invoice[field] = req.body[field];
+      }
+    }
+
+    await invoice.save();
+    res.json(invoice);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

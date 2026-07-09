@@ -70,6 +70,16 @@ const invoiceSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    notes1: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    notes2: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     items: {
       type: [invoiceItemSchema],
       default: [],
