@@ -30,12 +30,17 @@ router.post('/users', protect, admin, async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Validate password
+    if (!password || password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
     // Create user
     const user = await User.create({
       name,
       email,
-      password,
-      isAdmin: isAdmin || false
+      password: password.toString(),
+      isAdmin: typeof isAdmin === 'boolean' ? isAdmin : false
     });
 
     res.status(201).json({
@@ -65,7 +70,7 @@ router.put('/users/:id', protect, admin, async (req, res) => {
     user.name = name || user.name;
     user.email = email || user.email;
     if (typeof isAdmin !== 'undefined') {
-      user.isAdmin = isAdmin;
+      user.isAdmin = typeof isAdmin === 'boolean' ? isAdmin : false;
     }
 
     await user.save();
