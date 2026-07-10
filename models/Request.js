@@ -30,6 +30,10 @@ const requestSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  quotationNo: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true

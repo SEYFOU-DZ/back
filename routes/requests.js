@@ -16,6 +16,7 @@ router.post('/', protect, async (req, res) => {
       vehicleModel,
       vehicleYear,
       vehiclePlate,
+      quotationNo,
       description,
       pdfUrl,
       qrCodeUrl
@@ -29,6 +30,7 @@ router.post('/', protect, async (req, res) => {
       vehicleModel,
       vehicleYear,
       vehiclePlate,
+      quotationNo,
       description,
       pdfUrl,
       qrCodeUrl,
