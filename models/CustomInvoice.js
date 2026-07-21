@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 
 const customInvoiceItemSchema = new mongoose.Schema(
   {
-    description: String,
-    quantity: Number,
-    price: Number,
-    total: Number,
+    descriptionAr: { type: String, default: '' },
+    descriptionEn: { type: String, default: '' },
+    quantity: { type: Number, default: 1 },
+    unitPrice: { type: Number, default: 0 },
+    total: { type: Number, default: 0 },
   },
   { _id: false }
 );
@@ -22,71 +23,41 @@ const customInvoiceSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    invoiceDate: {
-      type: String,
-      required: true,
-      trim: true,
+    // Company Header snapshot
+    companyHeaderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CompanyHeader',
+      default: null,
     },
-    currency: {
-      type: String,
-      default: 'SAR',
+    companyHeaderSnapshot: {
+      companyName: { type: String, default: '' },
+      addressLines: {
+        type: [{ ar: String, en: String }],
+        default: [],
+      },
+      logoUrl: { type: String, default: '' },
     },
-    logoUrl: {
-      type: String,
-      default: '',
-    },
-    items: {
-      type: [customInvoiceItemSchema],
-      default: [],
-    },
-    subtotal: {
-      type: Number,
-      required: true,
-    },
-    taxRate: {
-      type: Number,
-      default: 15,
-    },
-    taxAmount: {
-      type: Number,
-      required: true,
-    },
-    total: {
-      type: Number,
-      required: true,
-    },
-    notes: {
-      type: [String],
-      default: [],
-    },
-    signatureType: {
-      type: String,
-      enum: ['manual', 'image'],
-      default: 'manual',
-    },
-    signatureData: {
-      type: String,
-      default: '',
-    },
-    language: {
-      type: String,
-      enum: ['ar', 'en'],
-      default: 'ar',
-    },
-    companyName: {
-      type: String,
-      trim: true,
-      default: '',
-    },
-    companyAddress: {
-      type: String,
-      trim: true,
-      default: '',
-    },
-    pdfUrl: {
-      type: String,
-      default: '',
-    },
+    // Client Info
+    clientName: { type: String, default: '' },
+    clientPhone: { type: String, default: '' },
+    clientEmail: { type: String, default: '' },
+    clientAddress: { type: String, default: '' },
+    // Invoice Dates
+    invoiceDate: { type: String, required: true },
+    dueDate: { type: String, default: '' },
+    // Currency & Items
+    currency: { type: String, default: 'SAR' },
+    items: { type: [customInvoiceItemSchema], default: [] },
+    // Totals
+    subtotal: { type: Number, required: true },
+    taxRate: { type: Number, default: 15 },
+    taxAmount: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
+    total: { type: Number, required: true },
+    // Notes as a list of strings
+    notes: { type: [String], default: [] },
+    // PDF storage
+    pdfUrl: { type: String, default: '' },
   },
   {
     timestamps: true,

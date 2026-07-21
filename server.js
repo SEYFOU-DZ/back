@@ -19,6 +19,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/requests', require('./routes/requests'));
 app.use('/api/invoices', require('./routes/invoices'));
 app.use('/api/custom-invoices', require('./routes/custom-invoices'));
+app.use('/api/company-headers', require('./routes/company-headers'));
 
 // Health check
 app.get('/api/health', (req, res) => {
